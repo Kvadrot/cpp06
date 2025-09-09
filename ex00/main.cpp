@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 12:03:44 by ufo               #+#    #+#             */
-/*   Updated: 2025/09/09 12:39:04 by ufo              ###   ########.fr       */
+/*   Updated: 2025/09/09 12:58:14 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include  "SuppFuncs.hpp"
 
 int main (void)  {
-    //isChar Tests
+
     std::string text = "1";
     std::cout << text << " = " << detectType(text) << std::endl;
     
@@ -34,6 +34,15 @@ int main (void)  {
     std::cout << text << " = " << detectType(text) << std::endl;
     
     text = "1e";
-    std::cout << text << " = " << detectType(text);
+    std::cout << text << " = " << detectType(text) << std::endl;
+
+    text = "+1";
+    std::cout << text << " = " << detectType(text) << std::endl;
+
+    text = "-2";
+    std::cout << text << " = " << detectType(text) << std::endl;
+
+    text = "-0";
+    std::cout << text << " = " << detectType(text) << std::endl;
     
 }
