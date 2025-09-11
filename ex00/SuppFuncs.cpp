@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:19:27 by ufo               #+#    #+#             */
-/*   Updated: 2025/09/10 13:08:58 by ufo              ###   ########.fr       */
+/*   Updated: 2025/09/10 13:26:07 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,13 @@ bool isDouble(const std::string &text) {
     return true;
 }
 
+// exact, case-sensitive, no spaces
+static bool isPseudo(const std::string &s)
+{
+	return  s == "nan"  || s == "+inf"  || s == "-inf" ||
+	        s == "nanf" || s == "+inff" || s == "-inff";
+}
+
 
 TypeLiteral detectType(const std::string& text) {
     if (isChar(text))
@@ -115,8 +122,8 @@ TypeLiteral detectType(const std::string& text) {
         return typeFloat;
     if (isDouble(text))
         return typeDouble;
-    // if (isPseudo(text))
-    //     return typePseudo;
+    if (isPseudo(text))
+        return typePseudo;
  
     return typeInvalid;
 }
