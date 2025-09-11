@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 11:19:27 by ufo               #+#    #+#             */
-/*   Updated: 2025/09/11 13:23:30 by ufo              ###   ########.fr       */
+/*   Updated: 2025/09/11 15:20:21 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,24 +82,62 @@ void printInputErr(const std::string& text) {
  }
  
 
-  void print_float_from_double(const double& numD) {
-    int floatedNumD = 0.0f;
-    if (numD < MIN_FLOAT || numD > MAX_FLOAT) {
-        std::cout << "float: impossible" << std::endl;
+void print_float_from_double(const double &d) {
+    float f = static_cast<float>(d);
+
+    // NaN
+    if (f != f) {
+        std::cout << "float: nanf" << std::endl;
         return;
     }
-    floatedNumD = static_cast<float>(numD);
-    std::cout << "float: " << floatedNumD << std::endl;
- }
+
+    // +Inf / -Inf
+    if (f == std::numeric_limits<float>::infinity()) {
+        std::cout << "float: +inff" << std::endl;
+        return;
+    }
+    if (f == -std::numeric_limits<float>::infinity()) {
+        std::cout << "float: -inff" << std::endl;
+        return;
+    }
+
+    // Pretty print with .0f if integer
+    if (f == static_cast<int>(f)) {
+        std::cout << "float: " 
+                  << std::fixed << std::setprecision(1)
+                  << f << "f" << std::endl;
+    } else {
+        std::cout << "float: " << f << "f" << std::endl;
+    }
+}
  
 
-   void print_double(const double& numD) {
-    if (numD < MIN_DOUBLE || numD > MAX_DOUBLE) {
-        std::cout << "double: impossible" << std::endl;
+void print_double(const double &d) {
+    // NaN
+    if (d != d) {
+        std::cout << "double: nan" << std::endl;
         return;
     }
-    std::cout << "double: " << numD << std::endl;
- }
+
+    // +Inf / -Inf
+    if (d == std::numeric_limits<double>::infinity()) {
+        std::cout << "double: +inf" << std::endl;
+        return;
+    }
+    if (d == -std::numeric_limits<double>::infinity()) {
+        std::cout << "double: -inf" << std::endl;
+        return;
+    }
+
+    // Pretty print with .0 if integer
+    if (d == static_cast<long>(d)) {
+        std::cout << "double: " 
+                  << std::fixed << std::setprecision(1)
+                  << d << std::endl;
+    } else {
+        std::cout << "double: " << d << std::endl;
+    }
+}
  
 
 //Casting funcs
@@ -170,7 +208,8 @@ void ScalarConvertor:: convert(const std::string& text) {
             printPseudo(text);
             return;
         default: //typeInvalid:
-            break;
+            printInputErr(text);
+            return;
     }
     print_char_from_double(wildCard);
 	print_int_from_double(wildCard);

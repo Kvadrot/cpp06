@@ -6,124 +6,53 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 12:03:44 by ufo               #+#    #+#             */
-/*   Updated: 2025/09/11 12:44:14 by ufo              ###   ########.fr       */
+/*   Updated: 2025/09/11 15:10:42 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScalarConvertor.hpp"
 #include  "SuppFuncs.hpp"
 
-int main (void)  {
+static void run(const char *s)
+{
+	std::string in = s ? s : "";
+	std::cout << "\n=== \"" << in << "\" ===\n";
+	ScalarConvertor::convert(in);
+}
 
-    std::string text = "1001412342134213412";
-    ScalarConvertor::convert(text);
+int main()
+{
+	const char *cases[] = {
+		// char (single printable, non-digit)
+		"a", " ", "~",
 
-    text = "1232";
-    ScalarConvertor::convert(text);
+		// int (valid)
+		"0", "7", "-0", "+42", "-2",
+		"2147483647",       // INT_MAX
+		"-2147483648",      // INT_MIN
 
-    text = "nanf";
-    ScalarConvertor::convert(text);
+		// int (overflow -> int: impossible; float/double ok)
+		"2147483648",
+		"-2147483649",
+		"145234857923745",
 
+		// double (valid)
+		"42.0", "-3.5", "0.0",
 
-//     std::cout << text << " = " << detectType(text) << std::endl;
-    
-//     text = "9";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-    
-//     text = " ";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-    
-//     text = "a";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-    
-//     text = "";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-    
-//     text = "n";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-    
-//     text = "1e";
-//     std::cout << text << " = " << detectType(text) << std::endl;
+		// float (valid, ends with 'f')
+		"42.0f", "-3.5f", "0.0f",
 
-//     text = "+1";
-//     std::cout << text << " = " << detectType(text) << std::endl;
+		// pseudo (you said you’ll handle them now)
+		"nan", "nanf", "+inf", "-inf", "+inff", "-inff",
 
-//     text = "-2";
-//     std::cout << text << " = " << detectType(text) << std::endl;
+		// invalid/malformed (should be typeInvalid)
+		"", "1.2ff", "1..2", "1.2.3f", "f1", "+", "++42",
+		" 42", "42 ", "1.", ".5", "2.f", "+.5f", "42f"
+	};
 
-//     text = "-0";
-//     std::cout << text << " = " << detectType(text) << std::endl;
+	const size_t n = sizeof(cases) / sizeof(cases[0]);
+	for (size_t i = 0; i < n; ++i)
+		run(cases[i]);
 
-//     text = "-214647541222";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-    
-//     text = "1.2";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "1.233.f";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "-2.1f";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "42.0f";
-//     std::cout << text << " = " << detectType(text) << std::endl;
-    
-
-//     // --- edge / failing cases to add ---
-// std::cout  << " = ============ ================ =" << std::endl;
-
-//     text = "";               // ❌ UB now: isChar reads text[0]; add empty guard
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = " 42";            // should be invalid (space + digits)
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "42 ";            // should be invalid (digits + space)
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "1.2ff";          // ❌ your isFloat likely returns true (extra 'f')
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "1.233.f";        // ❌ extra dot before 'f' — should be invalid
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "+.5f";           // decide rule: if you require digit before dot, should be invalid
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "2.f";            // length 3 → your isFloat rejects (minSize=4). OK if you want strict.
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = ".5";             // no leading digit; your isDouble rejects (minSize=3). OK if strict.
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "1.";             // no digit after dot; your isDouble may wrongly accept if not checking digits
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "nan";            // pseudo double — your code marks invalid (no isPseudo yet)
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "nanf";           // pseudo float — same, currently invalid
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "+inf";           // pseudo double — should be handled specially
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "-inff";          // pseudo float — should be handled specially
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "+";              // only sign — invalid int
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "++42";           // invalid (two signs)
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "1..2";           // invalid (two dots)
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "1.2.3f";         // invalid (two dots + 'f')
-//     std::cout << text << " = " << detectType(text) << std::endl;
-
-//     text = "f1";             // not a char, not a number
-//     std::cout << text << " = " << detectType(text) << std::endl;
+	return 0;
 }

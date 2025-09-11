@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 11:20:32 by ufo               #+#    #+#             */
-/*   Updated: 2025/09/11 10:58:42 by ufo              ###   ########.fr       */
+/*   Updated: 2025/09/11 15:16:50 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <string>
 #include <iostream>
+#include <limits>
+#include <iomanip>
 // 1) Detect main type (char / int / float / double / pseudo).
 
 // 2) Parse it.
