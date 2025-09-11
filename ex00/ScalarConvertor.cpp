@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 11:19:27 by ufo               #+#    #+#             */
-/*   Updated: 2025/09/11 11:52:54 by ufo              ###   ########.fr       */
+/*   Updated: 2025/09/11 12:43:48 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,26 @@ ScalarConvertor:: ~ScalarConvertor() {
 
 
 
-// interpriner funcs:
+// prints funcs:
+//
 void printInputErr(const std::string& text) {
     std::cout << text << " is invalid input" << std::endl;
 }
 
+ void printPseudo(const std::string& text) {
+    std::cout << "char: impossible\nint: impossible\n";
+    if (text == "nanf" || text == "+inff" || text == "-inff") {
+        std::cout << "float: "  << text << "\n";
+        std::cout << "double: " << (text == "nanf" ? "nan" : (text[0]=='-'?"-inf":"+inf")) << "\n";
+    } else {
+        std::cout << "float: "  << (text == "nan" ? "nanf" : (text[0]=='-'?"-inff":"+inff")) << "\n";
+        std::cout << "double: " << text << "\n";
+    }
+    return;
+ }
+
+//Casting funcs
+//
 double castCharToDouble(const std::string& text) {
     double res = 0.0;
     res = static_cast<unsigned char>(text[0]);
@@ -54,16 +69,34 @@ bool castStrToIntableDouble(const std::string text, double& inoutWD) {
 
     if (errno == ERANGE || end == text.c_str() || *end != '\0')
         return false;
-    if (MIN_INT > num || MAX_INT < num)
-        return false;
 
     inoutWD = static_cast<double>(num);
     return true;
 }
 
-// bool castStrToFloatableDouble(const std::string text, double& inoutWD) {
-    
-// }
+bool castStrToFloatableDouble(const std::string text, double& inoutWD) {
+    double numD = 0;
+    char *end = 0;
+    numD = std::strtod(text.c_str(), &end);
+
+    if (errno == ERANGE || end == text.c_str() || *end != '\0')
+        return false;
+
+    inoutWD = static_cast<double>(numD);
+    return true;
+}
+
+bool castStrToDouble(const std::string text, double& inoutWD) {
+    double numD = 0;
+    char *end = 0;
+    numD = std::strtod(text.c_str(), &end);
+
+    if (errno == ERANGE || end == text.c_str() || *end != '\0')
+        return false;
+
+    inoutWD = static_cast<double>(numD);
+    return true;
+}
 
 //Public
 void ScalarConvertor:: convert(const std::string& text) {
@@ -79,14 +112,17 @@ void ScalarConvertor:: convert(const std::string& text) {
                 return printInputErr(text);
             break;
         case typeFloat:
+            if (castStrToFloatableDouble(text, wildCard) == false)
+                return printInputErr(text);
             break;
         case typeDouble:
+            if (castStrToDouble(text, wildCard) == false)
+                return printInputErr(text);
             break;
         case typePseudo:
-            break;
-        case typeInvalid:
-            break;
-        default:
+            printPseudo(text);
+            return;
+        default: //typeInvalid:
             break;
     }
     std::cout << wildCard << " ====== " << std::endl;

@@ -6,7 +6,7 @@
 /*   By: ufo <ufo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 12:03:44 by ufo               #+#    #+#             */
-/*   Updated: 2025/09/11 11:53:40 by ufo              ###   ########.fr       */
+/*   Updated: 2025/09/11 12:44:14 by ufo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ int main (void)  {
     ScalarConvertor::convert(text);
 
     text = "1232";
+    ScalarConvertor::convert(text);
+
+    text = "nanf";
     ScalarConvertor::convert(text);
 
 
